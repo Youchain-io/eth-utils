@@ -6,12 +6,14 @@ root=$1  # base directory to use for datadir and logs
 shift
 dd=$1  # double digit instance id like 00 01 02
 shift
+network_id=$1  # ...
+shift
 
 
 # logs are output to a date-tagged file for each run , while a link is
 # created to the latest, so that monitoring be easier with the same filename
 # TODO: use this if GETH not set
-# GETH=geth
+GETH=geth
 
 # geth CLI params       e.g., (dd=04, run=09)
 datetag=`date "+%c%y%m%d-%H%M%S"|cut -d ' ' -f 5`
@@ -20,8 +22,9 @@ log=$root/log/$dd.$datetag.log     # /tmp/eth/04.09.log
 linklog=$root/log/$dd.current.log     # /tmp/eth/04.09.log
 stablelog=$root/log/$dd.log     # /tmp/eth/04.09.log
 password=$dd            # 04
-port=311$dd              # 30304
-rpcport=82$dd            # 8104
+port=303$dd              # 30304
+rpcport=81$dd            # 8104
+bootnode=$(cat $root/bootnode)
 
 mkdir -p $root/data
 mkdir -p $root/log
@@ -58,23 +61,29 @@ BZZKEY=`$GETH --datadir=$datadir account list|head -n1|perl -ne '/([a-f0-9]{40})
 # - listening on port 303dd, (like 30300, 30301, ...)
 # - with the account unlocked
 # - launching json-rpc server on port 81dd (like 8100, 8101, 8102, ...)
-echo "$GETH --datadir=$datadir \
-  --identity="$dd" \
-  --bzzaccount=$BZZKEY --bzzport=86$dd \
-  --port=$port \
-  --unlock=$BZZKEY \
-  --password=<(echo -n $dd) \
-  --rpc --rpcport=$rpcport --rpccorsdomain='*' $* \
-  2>&1 | tee "$stablelog" > "$log" &  # comment out if you pipe it to a tty etc.
+echo "$GETH --datadir $datadir \
+  --networkid $network_id \
+  --identity \"$dd\" \
+  --port $port \
+  --unlock $BZZKEY \
+  --password <(echo -n $dd) \
+  --rpc --rpcport $rpcport \
+  --rpccorsdomain '*' \
+  --bootnodes \"$bootnode\" \
+  --rpcapi \"db,eth,net,web3\" $* \
+  2>&1 | tee \"$stablelog\" > \"$log\" &  # comment out if you pipe it to a tty etc.
 "
 
-$GETH --datadir=$datadir \
-  --identity="$dd" \
-  --bzzaccount=$BZZKEY --bzzport=86$dd \
-  --port=$port \
-  --unlock=$BZZKEY \
-  --password=<(echo -n $dd) \
-  --rpc --rpcport=$rpcport --rpccorsdomain='*' $* \
+$GETH --datadir $datadir \
+  --networkid $network_id \
+  --identity "$dd" \
+  --port $port \
+  --unlock $BZZKEY \
+  --password <(echo -n $dd) \
+  --rpc --rpcport $rpcport \
+  --rpccorsdomain '*' \
+  --bootnodes "$bootnode" \
+  --rpcapi "db,eth,net,web3" $* \
    2>&1 | tee "$stablelog" > "$log" &  # comment out if you pipe it to a tty etc.
 
 # to bring up logs, uncomment
