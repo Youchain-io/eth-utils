@@ -46,7 +46,7 @@ if [ ! -f "$dir/genesis.json"  ]; then
   echo "setting up genesis"
   echo "{ \
     \"config\": { \
-      \"chainId\": 0, \
+      \"chainId\": $network_id, \
       \"homesteadBlock\": 0, \
       \"eip155Block\": 0, \
       \"eip158Block\": 0 \
@@ -55,7 +55,7 @@ if [ ! -f "$dir/genesis.json"  ]; then
     \"coinbase\": \"0x0000000000000000000000000000000000000000\", \
     \"difficulty\": \"0x400\", \
     \"extraData\": \"\", \
-    \"gasLimit\": \"0x2fefd8\", \
+    \"gasLimit\": \"0x47E7C4\", \
     \"nonce\": \"0x0000000000000042\", \
     \"mixhash\": \"0x0000000000000000000000000000000000000000000000000000000000000000\", \
     \"parentHash\": \"0x0000000000000000000000000000000000000000000000000000000000000000\", \

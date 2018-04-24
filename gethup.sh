@@ -63,7 +63,6 @@ BZZKEY=`$GETH --datadir=$datadir account list|head -n1|perl -ne '/([a-f0-9]{40})
 # - launching json-rpc server on port 81dd (like 8100, 8101, 8102, ...)
 echo "$GETH --datadir $datadir \
   --networkid $network_id \
-  --identity \"$dd\" \
   --port $port \
   --unlock $BZZKEY \
   --password <(echo -n $dd) \
@@ -76,7 +75,6 @@ echo "$GETH --datadir $datadir \
 
 $GETH --datadir $datadir \
   --networkid $network_id \
-  --identity "$dd" \
   --port $port \
   --unlock $BZZKEY \
   --password <(echo -n $dd) \
