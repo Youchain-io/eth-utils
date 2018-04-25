@@ -96,6 +96,10 @@ if [ ! -f "$dir/nodes"  ]; then
     if ((i<N+1)); then
       echo "," >> $dir/nodes
     fi
+
+    echo "creating attach script"
+    echo "$eth attach" >> $dir/attach-$id.sh
+    bash -c "chmod +x $dir/attach-$id.sh"
   done
   echo "]" >> $dir/nodes
 fi
@@ -108,7 +112,7 @@ for ((i=2;i<N+2;++i)); do
   echo "launching node $i/$N ---> tail-f $dir/log/$id.log"
   eth="bash ./gethup.sh $dir $id $network_id"
   cmd="$eth"
-  if ((i==N+1)); then
+  if ((i>=N)); then
     cmd="$eth --mine --minerthreads=1"
   fi
   echo $cmd
