@@ -44,23 +44,23 @@ GETH=geth
 if [ ! -f "$dir/genesis.json"  ]; then
 
   echo "setting up genesis"
-  echo "{ \
-    \"config\": { \
-      \"chainId\": $network_id, \
-      \"homesteadBlock\": 0, \
-      \"eip155Block\": 0, \
-      \"eip158Block\": 0 \
-    }, \
-    \"alloc\": {}, \
-    \"coinbase\": \"0x0000000000000000000000000000000000000000\", \
-    \"difficulty\": \"0x400\", \
-    \"extraData\": \"\", \
-    \"gasLimit\": \"0x47E7C4\", \
-    \"nonce\": \"0x0000000000000042\", \
-    \"mixhash\": \"0x0000000000000000000000000000000000000000000000000000000000000000\", \
-    \"parentHash\": \"0x0000000000000000000000000000000000000000000000000000000000000000\", \
-    \"timestamp\": \"0x0\" \
-  }" >> $dir/genesis.json
+  echo "{ \n\
+  \"config\": { \n\
+    \"chainId\": $network_id, \n\
+    \"homesteadBlock\": 0, \n\
+    \"eip155Block\": 0, \n\
+    \"eip158Block\": 0 \n\
+  }, \n\
+  \"alloc\": {}, \n\
+  \"coinbase\": \"0x0000000000000000000000000000000000000000\", \n\
+  \"difficulty\": \"0x400\", \n\
+  \"extraData\": \"\", \n\
+  \"gasLimit\": \"0x47E7C4\", \n\
+  \"nonce\": \"0x0000000000000042\", \n\
+  \"mixhash\": \"0x0000000000000000000000000000000000000000000000000000000000000000\", \n\
+  \"parentHash\": \"0x0000000000000000000000000000000000000000000000000000000000000000\", \n\
+  \"timestamp\": \"0x0\" \n\
+}" >> $dir/genesis.json
 fi
 
 if [ ! -f "$dir/bootnode"  ]; then
