@@ -82,18 +82,19 @@ fi
 if [ ! -f "$dir/nodes"  ]; then
 
   echo "[" >> $dir/nodes
-  for ((i=2;i<N+2;++i)); do
-    id=`printf "%02d" $i`
+  for ((i=0;i<N;++i)); do
+    id=`printf "%02d" $((i+1))`
+    port=`printf "%02d" $((i+2))`
 
-    eth="$GETH --datadir $dir/data/$id --port 303$id --networkid $network_id"
+    eth="$GETH --datadir $dir/data/$id --port 303$port --networkid $network_id"
     echo "initializing node"
     cmd="$eth init $dir/genesis.json"
     bash -c "$cmd" 2>&1
-    echo "getting enode for instance $id ($i/$N)"
+    echo "getting enode for instance $id ($((i+1))/$N)"
     cmd="$eth js <(echo 'console.log(admin.nodeInfo.enode); exit();') "
     echo $cmd
     bash -c "$cmd" 2>/dev/null |grep enode |perl -pe "s/\[\:\:\]/$ip_addr/g" |perl -pe "s/^/\"/; s/\s*$/\"/;" |tee >> $dir/nodes
-    if ((i<N+1)); then
+    if ((i<N-1)); then
       echo "," >> $dir/nodes
     fi
 
@@ -104,15 +105,15 @@ if [ ! -f "$dir/nodes"  ]; then
   echo "]" >> $dir/nodes
 fi
 
-for ((i=2;i<N+2;++i)); do
-  id=`printf "%02d" $i`
-  # echo "copy $dir/data/$id/static-nodes.json"
+for ((i=0;i<N;++i)); do
+  id=`printf "%02d" $((i+1))`
+  port=`printf "%02d" $((i+2))`
+
   mkdir -p $dir/data/$id
-  # cp $dir/nodes $dir/data/$id/static-nodes.json
-  echo "launching node $i/$N ---> tail-f $dir/log/$id.log"
-  eth="bash ./gethup.sh $dir $id $network_id"
+  echo "launching node $id ($((i+1))/$N) ---> tail-f $dir/log/$id.log"
+  eth="bash ./gethup.sh $dir $id $port $network_id"
   cmd="$eth"
-  if ((i>=N)); then
+  if ((i==N-1)); then
     cmd="$eth --mine --minerthreads=1"
   fi
   echo $cmd

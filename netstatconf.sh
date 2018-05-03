@@ -24,13 +24,33 @@ shift
 
 echo "["
 
-for ((i=2;i<N+2;++i)); do
-    id=`printf "%02d" $i`
-    single_template="  {\n    \"name\"        : \"$name_prefix-$i\",\n    \"cwd\"         : \".\",\n    \"script\"      : \"app.js\",\n    \"log_date_format\"   : \"YYYY-MM-DD HH:mm Z\",\n    \"merge_logs\"    : false,\n    \"watch\"       : false,\n    \"exec_interpreter\"  : \"node\",\n    \"exec_mode\"     : \"fork_mode\",\n    \"env\":\n    {\n      \"NODE_ENV\"    : \"production\",\n      \"RPC_HOST\"    : \"$ip_addr\",\n      \"RPC_PORT\"    : \"81$id\",\n      \"LISTENING_PORT\"    : \"303$id\",\n      \"INSTANCE_NAME\"   : \"$name_prefix-$i\",\n      \"WS_SERVER\"     : \"$ws_server\",\n      \"WS_SECRET\"     : \"$ws_secret\",\n    }\n  }"
+for ((i=0;i<N;++i)); do
+    id=`printf "%02d" $((i+1))`
+    port=`printf "%02d" $((i+2))`
+
+    single_template="{ \n\
+    \"name\": \"$name_prefix-$id\", \n\
+    \"cwd\": \".\", \n\
+	\"script\": \"app.js\", \n\
+	\"log_date_format\": \"YYYY-MM-DD HH:mm Z\", \n\
+	\"merge_logs\": false, \n\
+	\"watch\": false, \n\
+	\"exec_interpreter\": \"node\", \n\
+	\"exec_mode\": \"fork_mode\", \n\
+	\"env\": { \n\
+		\"NODE_ENV\": \"production\", \n\
+		\"RPC_HOST\": \"$ip_addr\", \n\
+		\"RPC_PORT\": \"81$port\", \n\
+		\"LISTENING_PORT\": \"303$port\", \n\
+		\"INSTANCE_NAME\": \"$name_prefix-$id\", \n\
+		\"WS_SERVER\": \"$ws_server\", \n\
+		\"WS_SECRET\": \"$ws_secret\", \n\
+	} \n\
+}"
 
     endline=""
-    if ((i<N+1)); then
-        endline=","
+    if ((i<N-1)); then
+        endline=", "
     fi
     echo "$single_template$endline"
 done
