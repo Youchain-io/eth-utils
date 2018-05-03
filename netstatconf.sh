@@ -9,8 +9,6 @@
 # - <ip_addr> is the network ip
 #
 
-# open http://localhost:3301
-
 N=$1
 shift
 name_prefix=$1
