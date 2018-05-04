@@ -1,4 +1,4 @@
-# !/bin/bash
+#!/bin/bash
 
 killall node
 pm2 kill
